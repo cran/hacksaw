@@ -6,7 +6,9 @@
 <!-- badges: start -->
 
 ![](https://camo.githubusercontent.com/ea6e0ff99602c3563e3dd684abf60b30edceaeef/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f6c6966656379636c652d6578706572696d656e74616c2d6f72616e67652e737667)
-![CRAN log](http://www.r-pkg.org/badges/version/hacksaw) [![Travis build
+![CRAN log](http://www.r-pkg.org/badges/version/hacksaw)
+![](http://cranlogs.r-pkg.org/badges/grand-total/hacksaw) [![Travis
+build
 status](https://travis-ci.org/daranzolin/hacksaw.svg?branch=master)](https://travis-ci.com/daranzolin/hacksaw)
 <!-- badges: end -->
 
@@ -17,7 +19,13 @@ etc.).
 
 ## Installation
 
-You can install the released version of hacksaw from GitHub with:
+You can install the released version of hacksaw from CRAN with:
+
+``` r
+install.packages("hacksaw")
+```
+
+Or install the development version from GitHub with:
 
 ``` r
 remotes::install_github("daranzolin/hacksaw")
@@ -34,57 +42,12 @@ etc.).
 The useful`%<-%` and `%->%` operators are re-exported from [the zeallot
 package.](https://github.com/r-lib/zeallot)
 
-### precision\_split
-
-`precision_split` splits the mtcars data frame into two: one with mpg
-greater than 20, one with mpg less than 20:
+### filter
 
 ``` r
 library(hacksaw)
 library(tidyverse)
-#> ── Attaching packages ──────────────────────────────────────────────────────────────────────────── tidyverse 1.3.0 ──
-#> ✓ ggplot2 3.3.0     ✓ purrr   0.3.4
-#> ✓ tibble  3.0.1     ✓ dplyr   1.0.0
-#> ✓ tidyr   1.0.2     ✓ stringr 1.4.0
-#> ✓ readr   1.3.1     ✓ forcats 0.5.0
-#> ── Conflicts ─────────────────────────────────────────────────────────────────────────────── tidyverse_conflicts() ──
-#> x dplyr::filter() masks stats::filter()
-#> x dplyr::lag()    masks stats::lag()
 
-mtcars %>% 
-  precision_split(mpg > 20) %->% c(gt20mpg, lt20mpg)
-
-str(gt20mpg)
-#> 'data.frame':    18 obs. of  11 variables:
-#>  $ mpg : num  18.7 18.1 14.3 19.2 17.8 16.4 17.3 15.2 10.4 10.4 ...
-#>  $ cyl : num  8 6 8 6 6 8 8 8 8 8 ...
-#>  $ disp: num  360 225 360 168 168 ...
-#>  $ hp  : num  175 105 245 123 123 180 180 180 205 215 ...
-#>  $ drat: num  3.15 2.76 3.21 3.92 3.92 3.07 3.07 3.07 2.93 3 ...
-#>  $ wt  : num  3.44 3.46 3.57 3.44 3.44 ...
-#>  $ qsec: num  17 20.2 15.8 18.3 18.9 ...
-#>  $ vs  : num  0 1 0 1 1 0 0 0 0 0 ...
-#>  $ am  : num  0 0 0 0 0 0 0 0 0 0 ...
-#>  $ gear: num  3 3 3 4 4 3 3 3 3 3 ...
-#>  $ carb: num  2 1 4 4 4 3 3 3 4 4 ...
-str(lt20mpg)
-#> 'data.frame':    14 obs. of  11 variables:
-#>  $ mpg : num  21 21 22.8 21.4 24.4 22.8 32.4 30.4 33.9 21.5 ...
-#>  $ cyl : num  6 6 4 6 4 4 4 4 4 4 ...
-#>  $ disp: num  160 160 108 258 147 ...
-#>  $ hp  : num  110 110 93 110 62 95 66 52 65 97 ...
-#>  $ drat: num  3.9 3.9 3.85 3.08 3.69 3.92 4.08 4.93 4.22 3.7 ...
-#>  $ wt  : num  2.62 2.88 2.32 3.21 3.19 ...
-#>  $ qsec: num  16.5 17 18.6 19.4 20 ...
-#>  $ vs  : num  0 0 1 1 1 1 1 1 1 1 ...
-#>  $ am  : num  1 1 1 0 0 0 1 1 1 0 ...
-#>  $ gear: num  4 4 4 3 4 4 4 4 4 3 ...
-#>  $ carb: num  4 4 1 1 2 2 1 2 1 1 ...
-```
-
-### filter
-
-``` r
 iris %>% 
   filter_split(
     large_petals = Petal.Length > 5.1,
@@ -139,9 +102,47 @@ iris %>%
 #>   ..$ Petal.Width : num [1:150] 0.2 0.2 0.2 0.2 0.2 0.4 0.3 0.2 0.2 0.1 ...
 ```
 
+### count
+
+Count across multiple variables:
+
+``` r
+mtcars %>% 
+  count_split(
+    cyl,
+    carb,
+    across(c(cyl, gear))
+  )
+#> [[1]]
+#>   cyl  n
+#> 1   8 14
+#> 2   4 11
+#> 3   6  7
+#> 
+#> [[2]]
+#>   carb  n
+#> 1    2 10
+#> 2    4 10
+#> 3    1  7
+#> 4    3  3
+#> 5    6  1
+#> 6    8  1
+#> 
+#> [[3]]
+#>   cyl gear  n
+#> 1   8    3 12
+#> 2   4    4  8
+#> 3   6    4  4
+#> 4   4    5  2
+#> 5   6    3  2
+#> 6   8    5  2
+#> 7   4    3  1
+#> 8   6    5  1
+```
+
 ### distinct
 
-Easily get the unique values of multiple columns,
+Easily get the unique values of multiple columns:
 
 ``` r
 starwars %>% 
@@ -177,6 +178,43 @@ iris %>%
 #>   ..$ Petal.Width  : num [1:150] 0.2 0.2 0.2 0.2 0.2 0.4 0.3 0.2 0.2 0.1 ...
 #>   ..$ Species      : Factor w/ 3 levels "setosa","versicolor",..: 1 1 1 1 1 1 1 1 1 1 ...
 #>   ..$ Sepal.Length3: num [1:150] 15.3 14.7 14.1 13.8 15 16.2 13.8 15 13.2 14.7 ...
+```
+
+### group\_by
+
+``` r
+mtcars %>% 
+  group_by_split(cyl, gear, across(c(cyl, gear))) %>% 
+  map(tally, wt = vs)
+#> [[1]]
+#> # A tibble: 3 x 2
+#>     cyl     n
+#>   <dbl> <dbl>
+#> 1     4    10
+#> 2     6     4
+#> 3     8     0
+#> 
+#> [[2]]
+#> # A tibble: 3 x 2
+#>    gear     n
+#>   <dbl> <dbl>
+#> 1     3     3
+#> 2     4    10
+#> 3     5     1
+#> 
+#> [[3]]
+#> # A tibble: 8 x 3
+#> # Groups:   cyl [3]
+#>     cyl  gear     n
+#>   <dbl> <dbl> <dbl>
+#> 1     4     3     1
+#> 2     4     4     8
+#> 3     4     5     1
+#> 4     6     3     2
+#> 5     6     4     2
+#> 6     6     5     0
+#> 7     8     3     0
+#> 8     8     5     0
 ```
 
 ### transmute
@@ -225,7 +263,7 @@ iris %>%
   slice_split(
     largest_sepals = var_max(Sepal.Length, 4),
     smallest_sepals = var_min(Sepal.Length, 4)
-  )
+  )#
 #> $largest_sepals
 #>   Sepal.Length Sepal.Width Petal.Length Petal.Width   Species
 #> 1          7.7         3.8          6.7         2.2 virginica
@@ -241,7 +279,44 @@ iris %>%
 #> 4          4.4         3.2          1.3         0.2  setosa
 ```
 
-## eval\_split
+### precision\_split
+
+`precision_split` splits the mtcars data frame into two: one with mpg
+greater than 20, one with mpg less than 20:
+
+``` r
+mtcars %>% 
+  precision_split(mpg > 20) %->% c(lt20mpg, gt20mpg)
+
+str(gt20mpg)
+#> 'data.frame':    14 obs. of  11 variables:
+#>  $ mpg : num  21 21 22.8 21.4 24.4 22.8 32.4 30.4 33.9 21.5 ...
+#>  $ cyl : num  6 6 4 6 4 4 4 4 4 4 ...
+#>  $ disp: num  160 160 108 258 147 ...
+#>  $ hp  : num  110 110 93 110 62 95 66 52 65 97 ...
+#>  $ drat: num  3.9 3.9 3.85 3.08 3.69 3.92 4.08 4.93 4.22 3.7 ...
+#>  $ wt  : num  2.62 2.88 2.32 3.21 3.19 ...
+#>  $ qsec: num  16.5 17 18.6 19.4 20 ...
+#>  $ vs  : num  0 0 1 1 1 1 1 1 1 1 ...
+#>  $ am  : num  1 1 1 0 0 0 1 1 1 0 ...
+#>  $ gear: num  4 4 4 3 4 4 4 4 4 3 ...
+#>  $ carb: num  4 4 1 1 2 2 1 2 1 1 ...
+str(lt20mpg)
+#> 'data.frame':    18 obs. of  11 variables:
+#>  $ mpg : num  18.7 18.1 14.3 19.2 17.8 16.4 17.3 15.2 10.4 10.4 ...
+#>  $ cyl : num  8 6 8 6 6 8 8 8 8 8 ...
+#>  $ disp: num  360 225 360 168 168 ...
+#>  $ hp  : num  175 105 245 123 123 180 180 180 205 215 ...
+#>  $ drat: num  3.15 2.76 3.21 3.92 3.92 3.07 3.07 3.07 2.93 3 ...
+#>  $ wt  : num  3.44 3.46 3.57 3.44 3.44 ...
+#>  $ qsec: num  17 20.2 15.8 18.3 18.9 ...
+#>  $ vs  : num  0 1 0 1 1 0 0 0 0 0 ...
+#>  $ am  : num  0 0 0 0 0 0 0 0 0 0 ...
+#>  $ gear: num  3 3 3 4 4 3 3 3 3 3 ...
+#>  $ carb: num  2 1 4 4 4 3 3 3 4 4 ...
+```
+
+### eval\_split
 
 Evaluate any expression:
 

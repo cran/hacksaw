@@ -1,6 +1,6 @@
 Package: hacksaw
 Title: Additional Tools for Splitting and Cleaning Data
-Version: 0.0.1
+Version: 0.0.2
 Authors@R: 
     person(given = "David",
            family = "Ranzolin",
@@ -17,8 +17,8 @@ Imports: dplyr, purrr, rlang, utils, tidyselect, tibble, zeallot,
         magrittr
 Suggests: testthat, knitr, rmarkdown, tidyr
 NeedsCompilation: no
-Packaged: 2020-07-14 18:57:57 UTC; davidranzolin
+Packaged: 2020-12-15 00:20:17 UTC; davidranzolin
 Author: David Ranzolin [aut, cre, cph]
 Maintainer: David Ranzolin <daranzolin@gmail.com>
 Repository: CRAN
-Date/Publication: 2020-07-18 09:40:02 UTC
+Date/Publication: 2020-12-15 05:30:02 UTC
